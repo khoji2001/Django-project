@@ -134,7 +134,7 @@ class SuretysInline(admin.TabularInline):
     def has_view_permission(self, request, obj=None):
         return True
 
-class contractAdmin(ModelAdminJalaliMixin,admin.ModelAdmin):
+class ContractAdmin(ModelAdminJalaliMixin,admin.ModelAdmin):
     change_form_template = 'admin/contract/change_form.html'
     add_form_template = 'admin/contract/change_form.html'
     fieldsets_and_inlines_order = ('f','f','i','i','i','f')
@@ -658,7 +658,7 @@ class contractAdmin(ModelAdminJalaliMixin,admin.ModelAdmin):
                 c.pay_day = day
                 c.save()
     update.short_description = 'ثبت روز پرداخت قراردادهای انتخاب شده'
-class paymentAdmin(ModelAdminJalaliMixin,admin.ModelAdmin):
+class PaymentAdmin(ModelAdminJalaliMixin,admin.ModelAdmin):
     
     formfield_overrides = {
         models.IntegerField : { 'widget' : NumberInput(attrs={'size' : 40})}
@@ -674,7 +674,7 @@ VCC_STATUSES = {
     '1' :'مصرف شده',
     '2' : 'در حال استفاده',
 }
-class contract_statusFilter(admin.SimpleListFilter):
+class Contract_statusFilter(admin.SimpleListFilter):
     template = 'django_admin_listfilter_dropdown/dropdown_filter.html'
     title = 'وضعیت قرارداد '
     parameter_name = 'contract_status'
@@ -694,7 +694,7 @@ class contract_statusFilter(admin.SimpleListFilter):
             return queryset
         else:
             return queryset.filter(contract__status = self.value())
-class statusFilter(admin.SimpleListFilter):
+class StatusFilter(admin.SimpleListFilter):
     template = 'django_admin_listfilter_dropdown/dropdown_filter.html'
     title = ' وضعیت '
     parameter_name = 'vcc_status'
@@ -713,7 +713,7 @@ class statusFilter(admin.SimpleListFilter):
             return queryset.filter(status = 1)
         elif int(self.value()) == 2:
             return queryset.filter(status = 2)
-class debitFilter(admin.SimpleListFilter):
+class DebitFilter(admin.SimpleListFilter):
     template = 'django_admin_listfilter_dropdown/dropdown_filter.html'
     title = ' معوق '
     parameter_name = 'debit_amount'
@@ -740,7 +740,7 @@ class debitFilter(admin.SimpleListFilter):
             if int(self.value()) == 10:
                 return queryset.filter(number_of_debit__gte = int(self.value()) )
             return queryset.filter(number_of_debit__gte = int(self.value()),number_of_debit__lt = 1 + int(self.value()))
-class dayFilter(admin.SimpleListFilter):
+class DayFilter(admin.SimpleListFilter):
     template = 'django_admin_listfilter_dropdown/dropdown_filter.html'
     title = ' روز پرداخت '
     parameter_name = 'pay_day_amount'
@@ -803,7 +803,7 @@ class HasdebitFilter(admin.SimpleListFilter):
             return queryset.filter(debit_amount__lte = 0)
         return queryset
 
-class busyVccAdmin(admin.ModelAdmin):
+class BusyVccAdmin(admin.ModelAdmin):
     fieldsets_and_inlines_order = ()
     formfield_overrides = {
         models.IntegerField : { 'widget' : NumberInput(attrs={'size' : 40})}
@@ -1304,7 +1304,7 @@ class busyVccAdmin(admin.ModelAdmin):
         return FileResponse(open("vccs_excel.xlsx",'rb'),as_attachment = True)
     export_as_excel.short_description = 'خروجی اکسل کارت های انتخاب شده'
 
-class vcc_freeAdmin(admin.ModelAdmin):
+class Vcc_freeAdmin(admin.ModelAdmin):
     fieldsets_and_inlines_order = ()
     search_fields = ('number',)
     list_filter = [ 'coffer',]

@@ -42,7 +42,7 @@ def add_card(vcc_number):
         Vcc = vcc(number = vcc_number)
         Vcc.save()
 
-class vcc(models.Model):
+class Vcc(models.Model):
     number = models.CharField (max_length = 16 , unique = True , verbose_name = 'شماره کارت')
     amount = models.IntegerField(default = 0 , verbose_name = 'موجودی')
     status = models.CharField(max_length = 1 ,default = '0'  ,choices = VCC_STATUSES, verbose_name = 'وضعیت')
@@ -97,26 +97,26 @@ class CardManager_nok(models.Manager):
 class CardManager_busy(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status__in=['1','2'])
-class nok_vcc(vcc):
+class Nok_vcc(vcc):
     objects = CardManager_nok()
     class Meta:
         proxy = True
         verbose_name = 'پرونده نکول شده'
         verbose_name_plural = 'پرونده های نکول شده'
-class vcc_free(vcc):
+class Vcc_free(vcc):
     objects = CardManager_free()
     class Meta:
         proxy = True
         verbose_name = 'کارت بانکی آزاد'
         verbose_name_plural = 'کارت های بانکی آزاد'
-class vcc_busy(vcc):
+class Vcc_busy(vcc):
     objects = CardManager_busy()
     class Meta:
         proxy = True
         verbose_name = 'وصول مطالبه'
         verbose_name_plural = 'وصول مطالبات'
 
-class due_contractsManager(models.Manager):
+class Due_contractsManager(models.Manager):
     def get_queryset(self):
         now = timezone.now().date()
         year,month,today = jalali.Gregorian(now).persian_tuple()
@@ -138,7 +138,7 @@ class due_contractsManager(models.Manager):
                 pass
         return dued_contracts
 
-class debt_contractsManager(models.Manager):
+class Debt_contractsManager(models.Manager):
     def get_queryset(self):
         debt_contracts = []
         temp_contracts = super().get_queryset().filter(status = '4')
@@ -147,7 +147,7 @@ class debt_contractsManager(models.Manager):
                 debt_contracts.append(c)
         return debt_contracts
 
-class clear_contractsManager(models.Manager):
+class Clear_contractsManager(models.Manager):
     def get_queryset(self):
         clear_contracts = []
         temp_contracts = super().get_queryset().filter(status = '4').annotate(
@@ -194,7 +194,7 @@ def validate_rate(value):
             _('%(value)s بین ۰-۱ نیست.'),
             params={'value': value},
         )
-class contract(models.Model):
+class Contract(models.Model):
     customer = models.ForeignKey('customer.customer', on_delete = models.SET_NULL , null = True, verbose_name = 'متقاضی')
     supplier = models.ForeignKey('supplier.supplier', on_delete = models.SET_NULL , null = True, verbose_name = 'تأمین کننده')
     Type = models.CharField(max_length = 1 , default = '1' ,choices = TYPE_CHOICES , verbose_name = "نوع قرارداد" )
@@ -784,7 +784,7 @@ class ContractSuretys(models.Model):
     def __str__(self):
         return ''
 
-class payment(models.Model):
+class Payment(models.Model):
     amount = models.IntegerField(verbose_name = 'مبلغ' , help_text = 'ریال')
     date = models.DateField(verbose_name = 'تاریخ')
     voucher_id = models.CharField(max_length = 40 , unique = True, verbose_name = 'شماره سند بانکی')
@@ -845,7 +845,7 @@ class payment(models.Model):
 
     
 
-class contract_coffer_info:
+class Contract_coffer_info:
     def __init__(self,Contract):
         self.customer_name = Contract.customer_fullname
         self.facility = Contract.facility
@@ -861,7 +861,7 @@ class contract_coffer_info:
             self.balance_date = '0'
         self.supp_name = Contract.supplier_name
         
-class contract_info:
+class Contract_info:
     def __init__(self,Contract):
         try:
             Customer = Contract.customer
@@ -975,7 +975,7 @@ class contract_info:
         except ObjectDoesNotExist:
             return None
 
-class month_summ:
+class Month_summ:
     def __init__(self,supp,start,stop):
         self.start_date = persian_numbers_converter(jalali.Gregorian(start).persian_string('{}/{}/{}'))
         self.stop_date = persian_numbers_converter(jalali.Gregorian(stop).persian_string('{}/{}/{}'))

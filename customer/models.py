@@ -197,7 +197,7 @@ class RejectDescription(Description):
         proxy = True
         verbose_name = 'توضیح رد'
         verbose_name_plural = 'توضیحات رد'
-class customer(User):
+class Customer(User):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE , verbose_name = 'کاربر', parent_link=True)
       
     job = models.CharField(max_length = 30 , blank = True , verbose_name = 'عنوان شغلی')
@@ -434,7 +434,7 @@ class Financial_Information(models.Model):
     def __str__(self):
         return str(self.customer.user.mobile_number)
     
-class surety(models.Model):
+class Surety(models.Model):
     first_name = models.CharField (max_length = 30 ,default = '' , blank = True, verbose_name = 'نام')
     last_name = models.CharField (max_length = 30 ,default = '' , blank = True, verbose_name = 'نام خانوادگی')
     gender = models.CharField(max_length = 1 ,default = 'm',  choices = USER_GENDER , verbose_name = 'جنسیت')
@@ -477,7 +477,7 @@ class surety(models.Model):
         return self.first_name + ' ' + self.last_name
 
 JOB_CLASSES_DICT = dict(CUSTOMER_JOB_CLASSES)
-class customer_info:
+class Customer_info:
     def __init__(self,customer):
         user = customer.user
         suretys = customer.suretys.all()

@@ -164,7 +164,7 @@ def logo_directory_path(instance, imagename):
     # file will be uploaded to MEDIA_ROOT/brand/brand_slug
     return 'brand/{0}'.format(instance.slug)
 
-class brand(models.Model):
+class Brand(models.Model):
     title = models.CharField(max_length = 100 , verbose_name = 'عنوان')
     slug = models.SlugField(max_length = 100 , allow_unicode = True, verbose_name = 'لینک کوتاه')
     logo = models.ImageField(upload_to = logo_directory_path , verbose_name = 'تصویر' , null = True)
@@ -208,7 +208,7 @@ SUPPLIER_STATUS = (
     (True , 'نمایش داده شود'),
     (False , 'پیش نویس'),
 )
-class supplier(User): 
+class Supplier(User): 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE ,
 	verbose_name = 'نماینده', parent_link=True )
     coffer = models.ForeignKey(coffer, on_delete = models.SET_NULL, null = True ,verbose_name = 'تامین کننده مالی' )
@@ -290,7 +290,7 @@ class supplier(User):
     def __str__(self):
         return self.name
 
-class abstract_supplier():
+class Abstract_supplier():
 
     def __init__(self , agent_firstname , agent_lastname , agent_mobile_number , brand , phone_number 
     , province , city , address , description ):

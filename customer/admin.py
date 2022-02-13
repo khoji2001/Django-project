@@ -43,11 +43,11 @@ CUSTOMER_STATUS = CUSTOMER_STATUS + (('7' , 'پرداخت اقساط'),)
 CUSTOMER_STATUS_DICTIONARY = dict((x, y) for x, y in CUSTOMER_STATUS)
 
 # Register your models here.
-class financialInformationInline(admin.StackedInline):
+class FinancialInformationInline(admin.StackedInline):
     model = Financial_Information
     extra = 0
 
-class checkInformationInline(admin.StackedInline):
+class CheckInformationInline(admin.StackedInline):
     model = Check_information
     extra = 0
 
@@ -62,7 +62,7 @@ class FamilyInline(admin.StackedInline):
         }),
     )
 
-class suretiesInline(admin.StackedInline):
+class SuretiesInline(admin.StackedInline):
     model = Guarantee
     extra = 0 
     fk_name = 'customer'
@@ -74,7 +74,7 @@ class suretiesInline(admin.StackedInline):
         }),
     )
 
-class customersInline(admin.StackedInline):
+class CustomersInline(admin.StackedInline):
     model = Guarantee
     extra = 0 
     fk_name = 'surety'
@@ -202,7 +202,7 @@ class UserFilter(admin.SimpleListFilter):
             return queryset
         
 
-class customerAdmin(ModelAdminJalaliMixin, UserAdmin):
+class CustomerAdmin(ModelAdminJalaliMixin, UserAdmin):
     change_form_template = 'admin/customer/change_form.html'
     add_form_template = 'admin/customer/change_form.html'
     add_form = CustomerCreationForm
@@ -481,7 +481,7 @@ class customerAdmin(ModelAdminJalaliMixin, UserAdmin):
     export_as_excel.short_description = 'خروجی اکسل متقاضیان انتخاب شده'
 admin.site.register(customer , customerAdmin)
 
-class suretyAdmin(admin.ModelAdmin):
+class SuretyAdmin(admin.ModelAdmin):
     fieldsets_and_inlines_order = ()
     formfield_overrides = {
         models.IntegerField : { 'widget' : NumberInput(attrs={'size' : 40})}

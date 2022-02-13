@@ -217,7 +217,7 @@ class ContractSerializer(ModelSerializer):
 		extra_kwargs = {'appoint_time': {'required': False}}
 
 
-class contractobjSerializer(ModelSerializer):
+class ContractobjSerializer(ModelSerializer):
 	def show(self,data):
 		l = []
 		for pk in data:

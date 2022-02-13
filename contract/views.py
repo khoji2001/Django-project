@@ -316,7 +316,7 @@ def notify_debt_contracts():
     c.instalment_due_day , c.vcc_number ,c.old_debit_amount_persian)
         send_sms(c.customer_mobile(), text)
 
-class detailpdf:
+class Detailpdf:
     def __init__(self,cc):
         self.vcc_number = cc.vcc_number
         self.contract_id = cc.contract_id

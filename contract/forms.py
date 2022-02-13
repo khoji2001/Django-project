@@ -23,7 +23,7 @@ class Uploadpaymentexcel(forms.Form):
 	file = forms.FileField()
 	sms_send = forms.BooleanField(label='ارسال پیامک',required=False, widget=Select(choices=SMS_SEND_CHOICE), initial=False)
 
-class dateform(forms.Form):
+class Dateform(forms.Form):
     date = JalaliDateField(label="تاریخ تسویه با فروشگاه " , widget = AdminJalaliDateWidget)
 
 class Uploadvccexcel(forms.Form):
@@ -43,7 +43,7 @@ class FinancingForm(forms.Form):
 	issuer = forms.ModelMultipleChoiceField(label="صادر کننده ضمانت ",widget=forms.CheckboxSelectMultiple,required=False,queryset=issuer.objects.all())
 	btnـcoffer = forms.BooleanField(label= " همه تامین کنندگان مالی",initial=False, required=False) 
 	btn_issuer = forms.BooleanField(label= "همه صادر کنندگان ضمانت‌نامه",initial=False, required=False) 
-class vccForm(forms.Form):
+class VccForm(forms.Form):
 	supp = forms.ModelMultipleChoiceField(label="تامین کنندگان",required=False,widget=forms.CheckboxSelectMultiple,queryset=supplier.objects.all())
 	btn =forms.BooleanField(label="همه",initial=False, required=False) 
 class DueContracts(forms.Form):
