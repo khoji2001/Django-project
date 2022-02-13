@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  test :
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/backend
+      - test_static_volume:/backend/static
+      - test_media_volume:/backend/media
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    networks:
+      - test_network
+      - nginx_network
+    depends_on:
+      - test_Postgresql
+
+
+
+  test_Postgresql:
+    image : postgres:10
+    container_name: test_postgresql_test
+    volumes:
+      - test_Postgresql:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: always
+    ports:
+      - "5435:5432"
+    networks:
+      - test_network
+
+volumes:
+  test_Postgresql:
+    external: true
+  test_static_volume:
+    external: true
+  test_media_volume:
+    external: true
+
+networks:
+  test_network:
+    external: true
+  nginx_network:
+    external: true

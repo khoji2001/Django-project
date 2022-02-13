@@ -1,0 +1,622 @@
+
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
+{% block extrastyle %}
+{% block extrahead%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
+
+{% endblock %}
+<style>
+
+
+input[type=text], input[type=text]{
+	padding: 5px  10px !important;
+}
+.modal {
+		display: none; /* Hidden by default */
+		position: fixed; /* Stay in place */
+		z-index: 1; /* Sit on top */
+		padding-top: 40px; /* Location of the box */
+		left: 0;
+		top: 0;
+		width: 100%; /* Full width */
+		height: 100%; /* Full height */
+		overflow: auto; /* Enable scroll if needed */
+		background-color: rgb(0,0,0); /* Fallback color */
+		background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	  }
+	  
+	  /* Modal Content */
+	  .modal-content {  
+		position: relative;
+		background-color: #ecfcfd;
+		margin: auto;
+		padding: 0;
+		border: 1px solid #888;
+		width: 60%;
+		
+		text-align: right;
+		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+		-webkit-animation-name: animatetop;
+		-webkit-animation-duration: 0.4s;
+		animation-name: animatetop;
+		animation-duration: 0.4s
+	  }
+	  
+	  /* Add Animation */
+	  @-webkit-keyframes animatetop {
+		from {top:-300px; opacity:0} 
+		to {top:0; opacity:1}
+	  }
+	  
+	  @keyframes animatetop {
+		from {top:-300px; opacity:0}
+		to {top:0; opacity:1}
+	  }
+	  
+	  /* The Close Button */
+	  .close {
+		color: white;
+		float: left;
+		font-size: 28px;
+		font-weight: bold;
+	  }
+	  
+	  .close:hover,
+	  .close:focus {
+		color: #000;
+		text-decoration: none;
+		cursor: pointer;
+	  }
+	  
+	  .modal-header {
+		padding: 2px 16px;
+		background-color: #417690;
+		color: white;
+	  }
+	  
+	  .modal-body {
+		  padding: 10px 10px 10px ;
+      display:  grid;
+      /* grid-template-columns: [net_amount] 33% [facility] 33% [supplier] 33% [endcol]; */
+      grid-template-rows: [row1] 50% [row2] 10% [row3] 40% [endrow]; 
+      /* grid-template-columns: repeat(auto-fit, minmax(300px, 1.5fr)); */
+      justify-items: center;
+      align-content: space-around;
+      column-gap: 10px;
+      row-gap: 0px;
+      /* grid-auto-flow: column;  */
+      /* grid-auto-columns: minmax(300px, 1fr); */
+		}
+	  .netAmountInfo{
+      /* grid-column-start: net_amount;
+      grid-column-end: facility; */
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-row-start: row1;
+      grid-row-end: row2;
+      /* grid-auto-flow: column;
+  grid-auto-columns: minmax(260px, 1fr); */
+    }
+    .facilityInfo{
+      /* grid-column: facility / supplier; */
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-row: row1 /  row2;
+      /* grid-auto-flow: column;
+  grid-auto-columns: minmax(260px, 1fr); */
+    }
+    .supplierInfo{
+      /* grid-column: supplier / endcol; */
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-row: row1 /  row2;
+      /* grid-auto-flow: column;
+  grid-auto-columns: minmax(260px, 1fr); */
+    }
+    .rowbetween{
+      grid-column: 2/3;
+      grid-row: row2 / row3;
+      align-self: center;
+      display: none;
+    }
+    .firstcol{
+      /* grid-column: net_amount / facility; */
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-row: row3 / endrow;
+      display: none;
+      /* grid-auto-flow: column;
+  grid-auto-columns: minmax(260px, 1fr); */
+    }
+    .secondcol{
+      /* grid-column: facility / supplier; */
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-row: row3 / endrow;
+      display: none;
+      /* grid-auto-flow: column;
+  grid-auto-columns: minmax(260px, 1fr); */
+    }
+    .thirdcol{
+      /* grid-column: supplier / endcol; */
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-row: row3 / endrow;
+      display: none;
+      /* grid-auto-flow: column;
+  grid-auto-columns: minmax(260px, 1fr); */
+    }
+	  .modal-footer {
+		padding: 15px 16px;
+		background-color: #417690;
+		text-align: left;
+	  }
+	  .bg-primary{
+		  background-color: #00aeef;
+	  }
+    .output{
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      border-width:0px;
+border:none;
+outline:none;
+      border-color: #020202;
+      background-color: #ecfcfd;
+    }
+</style>
+{% endblock %}
+{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
+
+{% block responsive %}
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
+{% endblock %}
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+</head>
+{% load i18n %}
+
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+  data-admin-utc-offset="{% now "Z" %}">
+
+<!-- Container -->
+<div id="container">
+
+    {% if not is_popup %}
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        {% block branding %}{% endblock %}
+        </div>
+        {% block usertools %}
+        <!-- ================================================= calculator button ======================================================= -->
+        <div style="margin-left: auto; margin-right: 3rem;">
+            <a type="button"  name="calc" id="calculatorBtn">ماشین حساب</a>
+        </div>
+        {% if has_permission %}
+        <div id="user-tools">
+            {% block welcome-msg %}
+                {% trans 'Welcome,' %}
+                <strong>{% firstof user.get_short_name user.get_username %}</strong>.
+            {% endblock %}
+            {% block userlinks %}
+                {% if site_url %}
+                    <a href="{{ site_url }}">{% trans 'View site' %}</a> /
+                {% endif %}
+                {% if user.is_active and user.is_staff %}
+                    {% url 'django-admindocs-docroot' as docsroot %}
+                    {% if docsroot %}
+                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
+                    {% endif %}
+                {% endif %}
+                {% if user.has_usable_password %}
+                <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
+                {% endif %}
+                <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+            {% endblock %}
+        </div>
+        {% endif %}
+        {% endblock %}
+        {% block nav-global %}{% endblock %}
+    </div>
+    <!-- END Header -->
+    {% block breadcrumbs %}
+    <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    {% if title %} &rsaquo; {{ title }}{% endif %}
+    </div>
+    {% endblock %}
+    {% endif %}
+
+    {% block messages %}
+        {% if messages %}
+        <ul class="messagelist">{% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+        {% endfor %}</ul>
+        {% endif %}
+    {% endblock messages %}
+
+    <!-- Content -->
+    <div id="content" class="{% block coltype %}colM{% endblock %}">
+        {% block pretitle %}{% endblock %}
+        {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+        {% block content %}
+        {% block object-tools %}{% endblock %}
+        {{ content }}
+        {% endblock %}
+        {% block sidebar %}{% endblock %}
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+
+    {% block footer %}<div id="footer"></div>{% endblock %}
+</div>
+<!-- END Container -->
+<!-- ================================================================== calc modal ===================================================== -->
+<!-- The save_Modal -->
+<div id="calcModal" class="modal" dir="rtl">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <span class="close" id="saveSpan">&times;</span>
+        <h2> ماشین حساب پنل ادمین</h2>
+      </div>
+      <div class="modal-body">
+      
+      <form ></form>
+        <div class="netAmountInfo">
+          <h4>اطلاعات فاکتور</h4>
+          <label for="fname">مبلغ فاکتور</label><br>
+          <input type="text" id="net_amount" name="net_amount" class="tousandsSeprator"><br>
+          <label for="lname">پیش‌پرداخت</label><br>
+          <input type="text" id="downpayment" name="downpayment" value="0.25" class="tousandsSeprator">
+          <small id="dRate" style="display: none;">نسبت پیش‌پرداخت: <span id="dRate_"></span></small> 
+          <small id="dAmount" style="display: none;">مقدار پیش‌پرداخت: <span id="dAmount_"></span> ﷼</small>
+	  <br>
+	  <label for="lname">تعداد اقساط</label><br>
+          <input type="number" id="number_of_instalment" name="number_of_instalment" ><br>
+        </div >
+
+        <div class="facilityInfo">
+          <h4>اطلاعات تسهیلات</h4>
+          <label for="fname">نرخ تسهیلات</label><br>
+          <input type="number" id="financial_source_rate" name="financial_source_rate" value="0.28"><br>
+          <label for="lname">کارمزد صدور ضمانت‌نامه</label><br>
+          <input type="number" id="warranty_gain_rate" name="warranty_gain_rate" value="0.02"><br>
+          <label for="fname">سهم شرکت از ضمانت‌نامه</label><br>
+          <input type="number" id="share_rate" name="share_rate" value="0.5"><br>
+          <label for="lname">کارمزد شرکت</label><br>
+          <input type="number" id="company_gain_rate" name="company_gain_rate" value="0.03"><br>
+          <label for="lname">کارمزد بازاریاب</label><br>
+          <input type="number" id="investor_gain_rate" name="investor_gain_rate" value="0"><br>
+
+        </div>
+ 
+        <div class="supplierInfo">
+          <h4>اطلاعات تامین کننده</h4>
+          <label for="fname">تخفیف فروشگاه</label><br>
+          <input type="number" id="discount" name="discount" value="0.07"><br>
+          <label for="lname">ضریب چک متقاضی</label><br>
+          <input type="number" id="customer_check_factor" name="customer_check_factor" value="1.1"><br>
+          <label for="fname">ضریب چک ضامن</label><br>
+          <input type="number" id="surety_check_factor" name="surety_check_factor" value="1.5"><br>
+        </div>
+        
+        <div class="rowbetween">
+		<br>
+		<!--- <h3 style="text-align: center;">خروجی</h3> -->
+        </div>
+          <div class="firstcol">
+         
+        
+            <label for="instalment_amount" class="outL"><b>مبلغ هر قسط:</b> </label>
+            <label id="instalment_amount"></label><br>
+            <!-- <input type="text" id="instalment_amount" name="instalment_amount" class="tousandsSeprator output" readonly><br><br> -->
+      
+            <label for="total_amount_of_instalments"><b>مجموع کل اقساط:</b></label>
+            <!-- <input type="text" id="total_amount_of_instalments" name="total_amount_of_instalments" class="tousandsSeprator output" readonly><br><br> -->
+            <label id="total_amount_of_instalments"></label><br>
+
+            <label for="customer_check"><b>مبلغ چک خریدار: </b></label>
+            <!-- <input type="text" id="customer_check" name="customer_check" class="tousandsSeprator output" readonly><br><br> -->
+            <label id="customer_check"></label><br>
+
+            <label for="surety_check"><b>مبلغ چک ضامن:</b></label>
+            <!-- <input type="text" id="surety_check" name="surety_check" class="tousandsSeprator output" readonly><br><br> -->
+            <label id="surety_check"></label><br>
+          </div>
+        
+          <div class="secondcol">
+            <label for="pure_company_gain"><b>درآمد خالص طرح:</b></label>
+            <!-- <input type="text" id="pure_company_gain" name="pure_company_gain" class="tousandsSeprator output" readonly><br><br> -->
+            <label id="pure_company_gain"></label><br>
+
+            <label for="investor_gain"><b>درآمد بازاریاب:</b></label>
+            <!-- <input type="text" id="investor_gain" name="investor_gain" class="tousandsSeprator output" readonly><br><br> -->
+            <label id="investor_gain"></label><br>
+
+            <label for="total_company_gain"><b>تسویه با طرح:</b></label>
+            <!-- <input type="text" id="total_company_gain" name="total_company_gain" class="tousandsSeprator output" readonly><br><br> -->
+            <label id="total_company_gain"></label><br>
+
+            <label for="supplier_balance"><b>تسویه با فروشگاه:</b></label>
+            <!-- <input type="text" id="supplier_balance" name="supplier_balance" class="tousandsSeprator output" readonly><br><br> -->
+            <label id="supplier_balance"></label><br>
+          </div>
+
+          <div class="thirdcol">
+            <label for="excel"><b>دانلود فایل اکسل:</b></label>
+            <!-- <input type="text" id="fname" name="fname"><br><br> -->
+            <a href="/api/admin/download" >دانلود</a>
+            <label id="excel"></label><br>
+          </div>
+        
+      </form>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" id="closeBtn"  class="btn bg-primary" style="margin-left: auto;">بستن</button> -->
+        <button type="button" name="getcalc" id="getcalc" class="btn bg-primary" style="padding: 5px;">محاسبه</button>
+      </div>
+    </div>
+</div>
+    
+<script  type="text/javascript">
+
+    // Get the modal
+var calc_modal = document.getElementById("calcModal");
+
+// Get the button that opens the modal
+var calc_btn = document.getElementById("calculatorBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// var close_btn=document.getElementById("closeBtn")
+// When the user clicks the button, open the modal 
+calc_btn.onclick = function() {
+  calc_modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  calc_modal.style.display = "none";
+}
+// closeBtn.onclick=function(){
+//   calc_modal.style.display = "none";
+// }
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == calc_modal) {
+    calc_modal.style.display = "none";
+  }
+}
+    //===============================================================================
+    $.ajaxSetup({ 
+     beforeSend: function(xhr, settings) {
+         function getCookie(name) {
+             var cookieValue = null;
+             if (document.cookie && document.cookie != '') {
+                 var cookies = document.cookie.split(';');
+                 for (var i = 0; i < cookies.length; i++) {
+                     var cookie = jQuery.trim(cookies[i]);
+                     // Does this cookie string begin with the name we want?
+                     if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                         break;
+                     }
+                 }
+             }
+             return cookieValue;
+         }
+         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+             // Only send the token to relative URLs i.e. locally.
+             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+         }
+      } 
+    });
+
+    function addEn(value){
+        var numbers={
+            '۱':'1',
+            '۲':'2',
+            '۳': '3',
+            '۴':'4',
+            '۵':'5',
+            '۶':'6',
+            '۷':'7',
+            '۸':'8',
+            '۹':'9',
+            '۰':'0',
+             '٫':','
+        }
+        var listEn=value.match(/[۰-۹]/g)
+      
+        for(i=0; i< value.length;i++){
+            value=value.replace(listEn[i],numbers[listEn[i]])
+   
+            
+        }
+        return value
+    }
+
+    function changePersion(value){
+
+        // var val=addEn(value)
+        
+        var val=value.replace(/,/g,"");
+        
+        return parseFloat(val);
+    }
+
+    $(document).ready(function(){
+      $(document).on("change","input",function(){
+
+        var down_payment= changePersion($("#downpayment").val())
+        var net_amount= changePersion($("#net_amount").val())
+       
+        if(down_payment < 1){
+         
+          $("#dRate").css("display","none")
+          $("#dAmount").css("display","block")
+          $("#dAmount_").text(function(i,origText){
+            return addComma((down_payment*net_amount).toString())
+          })
+        }
+        else if(down_payment>=1){
+        
+          $("#dAmount").css("display","none")
+          $("#dRate").css("display","block")
+          $("#dRate_").text(function(i,origText){
+            return (down_payment/net_amount)
+          })
+        }
+      })
+      
+      $("#getcalc").click(function(){
+        console.log("salam")
+        var net_amount=changePersion($("#net_amount").val())
+        var down_payment= changePersion($("#downpayment").val())
+      
+        if(down_payment>=1){
+          down_payment= down_payment/net_amount
+        }
+        
+            var test={
+              "net_amount": net_amount,
+              "number_of_instalment":$("#number_of_instalment").val() ,
+              "additional_costs":0,
+              "downpayment_rate": down_payment,
+              "discount": $("#discount").val(),
+              "financial_source_rate":$("#financial_source_rate").val(),
+              "company_gain_rate": $("#company_gain_rate").val(),
+              "investor_gain_rate":$("#investor_gain_rate").val(),
+              "warranty_gain_rate":$("#warranty_gain_rate").val(),
+              "share_rate":$("#share_rate").val(),
+              "customer_check_factor":$("#customer_check_factor").val(),
+              "surety_check_factor":$("#surety_check_factor").val(),
+              }
+
+            $.post("/api/admin/calculator",
+            JSON.stringify(test),
+              function(data, status){
+               
+                if(status=="success"){
+                  console.log(data)
+                  $(".rowbetween").css("display","block")
+                  $(".firstcol").css("display","block")
+                  $(".secondcol").css("display","block")
+                  $(".thirdcol").css("display","block")
+
+
+                  $("#instalment_amount").text(function(i, origText){
+                    return addComma(data.instalment_amount.toString()) 
+                  });
+                  // $("#instalment_amount").val(function() {
+                  //   return addComma(data.instalment_amount.toString())
+                  // });
+
+                  $("#total_amount_of_instalments").text(function(i, origText) {
+                    return addComma(data.total_amount_of_instalments.toString())
+                  });
+
+                  $("#customer_check").text(function(i, origText) {
+                    return addComma(data.customer_check.toString())
+                  });
+
+                  $("#surety_check").text(function(i, origText) {
+                    return addComma(data.surety_check.toString())
+                  });
+
+                  $("#pure_company_gain").text(function(i, origText) {
+                    return addComma(data.pure_company_gain.toString())
+                  });
+
+                  $("#investor_gain").text(function(i, origText) {
+                    return addComma(data.investor_gain.toString())
+                  });
+
+                  $("#total_company_gain").text(function(i, origText) {
+                    return addComma(data.total_company_gain.toString())
+                  });
+
+                  $("#supplier_balance").text(function(i, origText) {
+                    return addComma(data.supplier_balance.toString())
+                  });
+                }
+              })
+      })
+    })
+// ============================================================================
+var elems = document.getElementsByClassName("tousandsSeprator");
+
+    function addPersian(value){
+        var numbers={
+            1:'۱',
+            2:'۲',
+            3:'۳',
+            4:'۴',
+            5:'۵',
+            6:'۶',
+            7:'۷',
+            8:'۸',
+            9:'۹',
+            0:'۰',
+            ',': '٫'
+        }
+        var list=value.match(/[0-9]/g)
+
+        for(i=0; i< value.length;i++){
+            value=value.replace(list[i],numbers[list[i]])
+       
+            
+        }
+        return value
+    }
+    function addComma(value){
+
+        var float = value.split('.')[1];
+        value=value.split('.')[0];
+        
+        var caret = value.length-1;
+        while((caret-3)>-1)
+        {
+            caret -= 3;
+            value = value.split('');
+            value.splice(caret+1,0,",");
+            value = value.join('');
+        }
+        if(float!==undefined){
+            value=value+'.'+float;
+        }
+
+        return value;
+    }
+    for (var i = 0 ; i < elems.length; i++) {
+      
+    if(elems[i].value){
+        // elems[i].value=addPersian(elems[i].value)
+        var value=elems[i].value.replace(/,/g,"");
+        
+        // elems[i].dataset.currentValue=parseFloat(value);
+        elems[i].value=addComma(value)
+    }
+    elems[i].addEventListener("keydown",function(event){
+        var key = event.which;
+
+        if((key<46 || (key>57 && key<96) || key>105)  && key != 8 && key != 190) event.preventDefault();
+
+    });
+    elems[i].addEventListener("keyup",function(event){
+
+        // this.value=addPersian(this.value)
+        var value=this.value.replace(/,/g,"");
+        
+        // this.dataset.currentValue=parseFloat(value);
+              
+        this.value=addComma(value)
+        
+    });
+  }
+</script>
+</body>
+</html>

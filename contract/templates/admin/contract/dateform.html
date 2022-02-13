@@ -1,0 +1,36 @@
+{% load i18n l10n admin_urls static %}
+
+<html>
+    <head>
+        <title>
+            وضعیت مالی تست
+        </title>
+    </head>
+    <body dir = "rtl">
+        {% load jalali_tags %}
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'admin/jquery.ui.datepicker.jalali/themes/base/jquery-ui.min.css' %}">
+		<script src="{% static 'admin/js/django_jalali.min.js' %}"></script>
+        <h2> تغییر تاریخ تسویه با فروشگاه</h2>
+
+        <form method="POST">{% csrf_token %}
+            {% for obj in objects %}
+            <input type="hidden" name="_selected_action" value="{{ obj.pk|unlocalize }}">
+            {% endfor %}
+            {{ dateform.as_p }}
+            <input type="hidden" name="action" value="set_date_action">
+            <input type="hidden" name="post" value="yes">
+            <input type="submit" value="دریافت" id="submitme">
+            
+        </form>
+        
+        <ul>
+            {% for object in objects %}
+                <li>
+                    <a href="{{ object.pk }}/">{{ object.contract_id }}</a> - {{ object.customer }}
+                    <input type="hidden" name="_selected_action" value="{{ object.pk }}">
+                </li>
+            {% endfor %}
+        </ul>
+        
+    </body>

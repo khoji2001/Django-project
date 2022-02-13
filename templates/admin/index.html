@@ -1,0 +1,20 @@
+
+{% extends 'admin/index.html' %}
+
+{% load i18n static %}
+
+{% block content %}
+    <div id="content-main">
+        {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+    </div>
+{% endblock %}
+{%block sidebar%}
+    {{ block.super }}
+    {% if user.is_superuser %}
+    <a href="/contract/admin/financing" class="button" target="_blank">تامین مالی</a>
+    <a href="/contract/admin/vcc" class="button" target="_blank">وصول مطالباتی</a>
+    <a href="/contract/admin/supplier" class="button" target="_blank">تامین کنندگان</a>
+    <a href="/contract/admin/clearing" class="button" target="_blank">تسویه شده </a>
+    <a href="/contract/admin/income" class="button" target="_blank">درآمدی </a>
+    {% endif %}
+{% endblock %}

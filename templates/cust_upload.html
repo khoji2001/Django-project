@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>
+            بارگذاری اکسل متقاضیان
+        </title>
+    </head>
+    <body>
+        <form action="#" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ cust_form }}
+            <input type="submit" value="Submit">
+        </form>
+        <hr>
+    </body>
+</html>

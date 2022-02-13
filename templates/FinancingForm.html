@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>
+            وضعیت مالی 
+        </title>
+    </head>
+    <body dir = "rtl">
+        {% load jalali_tags %}
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'admin/jquery.ui.datepicker.jalali/themes/base/jquery-ui.min.css' %}">
+		<script src="{% static 'admin/js/django_jalali.min.js' %}"></script>
+        <h2>دریافت خلاصه وضعیت مالی - </h2>
+
+        <form method="post">{% csrf_token %}
+            {{ FinancingForm.as_p }}
+            <input type="submit" value="دریافت">
+        </form>
+    </body>
